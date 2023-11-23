@@ -26,7 +26,7 @@ mapping = {
             "contractName": {"type": "keyword"},
             "name": {"type": "text"},
             "address": {"type": "text"},
-            "last_update": {"type": "integer"},
+            "last_update": {"type": "text"},
             "position": {
                 "type": "geo_point",
                 "fields": {
@@ -88,7 +88,7 @@ schema = StructType([
     StructField("contractName", StringType(), True),
     StructField("name", StringType(), True),
     StructField("address", StringType(), True),
-    StructField("last_update", IntegerType(), True),
+    StructField("last_update", StringType(), True),
     StructField("position", StructType([
         StructField("latitude", FloatType(), True),
         StructField("longitude", FloatType(), True)

@@ -2,6 +2,7 @@ import json
 import time
 import urllib.request
 from kafka import KafkaProducer
+from datetime import datetime
 
 API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
@@ -14,7 +15,8 @@ while True:
 
     for station in stations_data:
         # Check if 'position' key exists
-        if 'position' in station:
+        if 'position' in station and station['last_update']:
+            utcfromtimestamp = datetime.utcfromtimestamp(int(station['last_update'])/1000).strftime('%Y-%m-%d %H:%M:%S')
             # Check if 'lat' and 'lng' keys exist under 'position'
             latitude = station["position"]["lng"] if "position" in station and "lat" in station["position"] else None
             longitude = station["position"]["lat"] if "position" in station and "lng" in station["position"] else None
@@ -24,7 +26,7 @@ while True:
                 "contractName": station["contract_name"] if "contract_name" in station else "",
                 "name": station["name"] if "name" in station else "",
                 "address": station["address"] if "address" in station else "",
-                "last_update":station["last_update"],
+                "last_update":utcfromtimestamp,
                 "position": {
                     "latitude": latitude,
                     "longitude": longitude
