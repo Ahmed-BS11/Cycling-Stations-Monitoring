@@ -52,6 +52,6 @@ Before executing the main pyspark_code.py, ensure that Zookeeper and Kafka serve
 
 after that you can run the main script
 ```bash
-   python3 pyspark_code.py
+python3 pyspark_code.py
+```
 
-    

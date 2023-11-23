@@ -144,7 +144,6 @@ velib_df = kafka_df \
 empty_station_condition = (col("bikes") == 0) & (col("capacity") > 0)
 
 # Filter stations that become empty
-print('########################################################','===========================================================')
 empty_stations_df = velib_df \
     .filter(empty_station_condition) \
     .select("address", "contractName", "number")
