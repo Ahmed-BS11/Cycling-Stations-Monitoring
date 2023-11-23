@@ -2,7 +2,8 @@
 
 ## Overview
 
-This Python script utilizes Apache Spark and Elasticsearch to monitor Velib bike stations' status in real-time. The script reads data from a Kafka topic, processes it using PySpark, and indexes the relevant information into Elasticsearch, And after that we can do some Visualizations with Kibana. Additionally, it identifies and logs empty bike stations.
+This Python script utilizes Apache Spark and Elasticsearch to monitor Velib bike stations' status in real-time. The script reads data from a Kafka topic, a distributed streaming platform, processes it using PySpark, and indexes the relevant information into Elasticsearch. After that, we can perform data visualizations using Kibana, taking advantage of the powerful analytics capabilities provided by the Elasticsearch-Kibana stack. Additionally, it identifies and logs empty bike stations, providing valuable insights into station utilization and availability.
+
 
 ## Requirements
 
