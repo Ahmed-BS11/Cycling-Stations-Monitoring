@@ -51,8 +51,8 @@ Before executing the main pyspark_code.py, ensure that Zookeeper and Kafka serve
     ```bash
    python3 velib-get-stations.py
 
-after that you can run the main script
+after that you can run the main script with spark-submit
 ```bash
-python3 pyspark_code.py
+spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 pyspark_code.py
 ```
 
