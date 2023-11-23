@@ -38,7 +38,7 @@ pip install -r requirements.txt
 
 ## Running the Script
 
-Before executing the main pyspark_code.py, ensure that Zookeeper and Kafka servers are running. You can start them using the following commands in different terminals and IN THAT ORDER:
+Before executing the main pyspark_consumer.py, ensure that Zookeeper and Kafka servers are running. You can start them using the following commands in different terminals and IN THAT ORDER:
 
 1. Start Zookeeper:
 
@@ -49,10 +49,10 @@ Before executing the main pyspark_code.py, ensure that Zookeeper and Kafka serve
    ./bin/kafka-server-start.sh ./config/server.properties
 3. Run the get_stations.py file by doing
     ```bash
-   python3 velib-get-stations.py
+   python3 Stations_producer.py
 
 after that you can run the main script with spark-submit
 ```bash
-spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 pyspark_code.py
+spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 pyspark_consumer.py
 ```
 
