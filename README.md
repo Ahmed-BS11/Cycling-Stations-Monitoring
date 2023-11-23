@@ -15,7 +15,7 @@ Ensure you have the following dependencies installed:
 You can install them using the following command:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt```
 
 ## Setup
 
