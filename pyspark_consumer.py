@@ -26,7 +26,7 @@ mapping = {
             "contractName": {"type": "keyword"},
             "name": {"type": "text"},
             "address": {"type": "text"},
-            "last_update": {"type": "text"},
+            "last_update": {"type": "date", "format": "yyyy-MM-dd HH:mm:ss||epoch_millis"},
             "position": {
                 "type": "geo_point",
                 "fields": {
