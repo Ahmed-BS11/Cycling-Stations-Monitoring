@@ -69,11 +69,11 @@ spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 pyspark
 
 *Description:* This image provides an overview of the stations map in Europe.
 
-## Valence City Map
+## Valencia City Map
 
-![Valence City Map](images/valencia_stations.png)
+![Valencia City Map](images/valencia_stations.png)
 
-*Description:* This image presents the map for bike stations and their capacity in the city of Valence.
+*Description:* This image presents the map for bike stations and their capacity in the city of Valencia.
 
 ## Bike Count Evolution in 3 Chosen Cities
 
