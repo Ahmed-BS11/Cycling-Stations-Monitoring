@@ -1,25 +1,30 @@
 from pyspark.sql.functions import from_json
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, struct
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType,FloatType
+from pyspark.sql.functions import col, struct, to_timestamp
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
+from os.path import abspath
 
 # Create an Elasticsearch client
-es = Elasticsearch([{'host':'localhost','port':9200,'scheme':'http'}])
+es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
 
 # Define the index name
-index_name = "velib-stations"  
+index_name = "velib-stations"
 
+# Warehouse location for Hive
+warehouse_location = abspath('spark-warehouse')
 
+# Check if the Elasticsearch index exists
 if es.indices.exists(index=index_name):
     # Delete the index
     es.indices.delete(index=index_name)
     print(f"Index '{index_name}' has been deleted.")
 else:
     print(f"Index '{index_name}' does not exist.")
-# Define the mapping for your index
-mapping = { 
+
+# Define the mapping for your Elasticsearch index
+mapping = {
     "mappings": {
         "properties": {
             "number": {"type": "integer"},
@@ -42,10 +47,7 @@ mapping = {
     }
 }
 
-
-
-     
-# Create the index with the specified mapping
+# Create the Elasticsearch index with the specified mapping
 es.indices.create(index=index_name, body=mapping)
 
 
@@ -55,7 +57,18 @@ def index_to_elasticsearch(batch_df, batch_id):
 
     # Get the schema of the DataFrame
     schema = batch_df.schema
-
+    flattened_df = batch_df.select(
+        "number",
+        "contractName",
+        "name",
+        "address",
+        "last_update",
+        "position.latitude",
+        "position.longitude",
+        "bikes",
+        "stands",
+        "capacity"
+    )
     # Extract actions from the DataFrame using the schema
     actions = [
         {
@@ -65,11 +78,10 @@ def index_to_elasticsearch(batch_df, batch_id):
                 for field in schema.fields
             }
         }
-        for row in batch_df.rdd.collect()
+        for row in batch_df.collect()
     ]
 
     print(f"Number of actions: {len(actions)}", "*=*==*=*=*=*=*=*=*=*=*=*=*=*==**=*==*=*=*=*=*=*=*=*=")
-
 
     # Index the documents into Elasticsearch
     success, failed = bulk(es, actions, raise_on_error=False)
@@ -80,9 +92,14 @@ def index_to_elasticsearch(batch_df, batch_id):
             print(f"Failed document: {failure}")
     else:
         print(f"Indexed {success} documents successfully.")
+    flattened_df = flattened_df.withColumn("last_update", to_timestamp(col("last_update"), "yyyy-MM-dd HH:mm:ss"))
 
+    flattened_df.write \
+        .mode("append") \
+        .insertInto("cycling_stations", overwrite=True)
+    
+    # Write to Hive table
 # Define the schema for your Kafka messages
-
 schema = StructType([
     StructField("number", IntegerType(), True),
     StructField("contractName", StringType(), True),
@@ -108,7 +125,33 @@ spark = SparkSession.builder \
     .config("spark.es.nodes", "localhost") \
     .config("spark.es.port", "9200") \
     .config("spark.es.nodes.wan.only", "true") \
+    .config("spark.sql.warehouse.dir", warehouse_location) \
+    .enableHiveSupport() \
     .getOrCreate()
+
+# Create the Hive database and use it
+spark.sql("CREATE DATABASE IF NOT EXISTS cycling_stations")
+spark.sql("USE cycling_stations")
+
+# Define the Hive table schema
+hive_table_schema = """
+    CREATE TABLE IF NOT EXISTS cycling_stations (
+        number INT,
+        contractName STRING,
+        name STRING,
+        address STRING,
+        last_update TIMESTAMP,
+        latitude STRING,
+        longitude STRING,
+        bikes INT,
+        stands INT,
+        capacity INT
+    )
+    STORED AS PARQUET
+"""
+
+# Create the Hive table
+spark.sql(hive_table_schema)
 
 # Create a DataFrame representing the stream of input lines from Kafka
 kafka_df = spark \
@@ -119,8 +162,6 @@ kafka_df = spark \
     .load()
 
 # Deserialize JSON data from Kafka and select relevant columns
-
-
 velib_df = kafka_df \
     .selectExpr("CAST(value AS STRING) as value") \
     .select(from_json("value", schema).alias("data")) \
@@ -138,7 +179,6 @@ velib_df = kafka_df \
         col("data.totalStands.availabilities.stands").cast(IntegerType()).alias("stands"),
         col("data.totalStands.capacity").cast(IntegerType()).alias("capacity")
     )
-
 
 # Define conditions for an empty station
 empty_station_condition = (col("bikes") == 0) & (col("capacity") > 0)
@@ -159,13 +199,23 @@ console_query = empty_stations_df \
 es_query = velib_df \
     .writeStream \
     .foreachBatch(index_to_elasticsearch) \
-    .start() \
+    .start()
 
 es_query.awaitTermination()
 
-
 # Wait for the streaming queries to terminate
 console_query.awaitTermination()
+
+# Read from the Hive table
+table_df = spark.sql("SELECT * FROM cycling_stations")
+
+# Check if the table has records
+record_count = table_df.count()
+
+if record_count > 0:
+    print(f"The Hive table 'cycling_stations' in database 'cycling_stations' has {record_count} records.")
+else:
+    print(f"The Hive table 'cycling_stations' in database 'cycling_stations' is empty.")
 
 # Stop the Spark session
 spark.stop()
