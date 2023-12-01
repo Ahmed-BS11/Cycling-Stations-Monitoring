@@ -55,4 +55,38 @@ after that you can run the main script with spark-submit
 ```bash
 spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 pyspark_consumer.py
 ```
+# Kibana Visualizations 
 
+## Kibana Dashboard
+
+![Kibana Dashboard](images/dashboard.png)
+
+*Description:* This image displays the Kibana dashboard.
+
+## Global Map
+
+![Global Map](images/global_map.png)
+
+*Description:* This image provides an overview of the stations map in Europe.
+
+## Valence City Map
+
+![Valence City Map](images/valencia_stations.png)
+
+*Description:* This image presents the map for bike stations and their capacity in the city of Valence.
+
+## Bike Count Evolution in 3 Chosen Cities
+
+![Bike Count Evolution](images/bike_evolution_3_cities.png)
+
+*Description:* This image illustrates the evolution of bike counts in three selected cities: Brussels, Tokyo, and Valencia.
+
+![Bike Count Evolution](images/3_diff_cities.png)
+
+*Description:* When hovering over the plot, the number of bikes in each city appears in the window.
+
+## Latest Bike Counts Table
+
+![Latest Bike Counts Table](images/last_number_of_bikes.png)
+
+*Description:* This image features the latest bike counts in different cities in the last 30 seconds.
