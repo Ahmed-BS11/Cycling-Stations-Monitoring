@@ -125,7 +125,9 @@ spark = SparkSession.builder \
     .config("spark.es.nodes", "localhost") \
     .config("spark.es.port", "9200") \
     .config("spark.es.nodes.wan.only", "true") \
-    .config("spark.sql.warehouse.dir", warehouse_location) \
+    .config("spark.sql.warehouse.dir", "hdfs://localhost:9000/user/hive/warehouse") \
+    .config("spark.sql.execution.engine", "llap") \
+    .config("spark.hadoop.hive.llap.daemon.service.hosts", "@{velib_llap}") \
     .enableHiveSupport() \
     .getOrCreate()
 
