@@ -128,4 +128,4 @@ For a comprehensive installation guide, you can refer to the [Installation Guide
 
 ### Detailed Installation Steps
 
-For specific and detailed installation instructions tailored to this project, please navigate to the [installation](installation/) folder in the repository.
+For specific and detailed installation instructions tailored to this project, please navigate to the [installation](installations/) folder in the repository.
