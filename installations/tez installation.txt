@@ -1,0 +1,56 @@
+# Download and extract Tez
+wget https://downloads.apache.org/tez/0.9.2/apache-tez-0.9.2-bin.tar.gz
+tar zxvf apache-tez-0.9.2-bin.tar.gz
+
+# Create Tez directory in HDFS
+$HADOOP_HOME/bin/hadoop fs -mkdir -p /apps/tez-0.9.2
+
+# Move into the Tez directory
+cd apache-tez-0.9.2-bin
+
+# Copy Tez tar.gz file to HDFS
+$HADOOP_HOME/bin/hadoop fs -copyFromLocal share/tez.tar.gz /apps/tez-0.9.2
+
+# Modify HDFS configuration
+sudo nano ${HADOOP_HOME}/etc/hadoop/hdfs-site.xml
+
+# Add the following properties
+<property>
+  <name>dfs.namenode.decommission.interval</name>
+  <value>30</value>
+</property>
+<property>
+  <name>dfs.client.datanode-restart.timeout</name>
+  <value>30</value>
+</property>
+
+# Save and exit the editor
+
+# Move into the Tez conf directory
+cd ${TEZ_HOME}/conf
+
+# Copy Tez default template
+cp tez-default-template.xml tez-site.xml
+
+# Modify Hive environment script
+sudo nano ${HIVE_HOME}/conf/hive-env.sh
+
+# Add the following line to set HADOOP_CLASSPATH
+export HADOOP_CLASSPATH=${TEZ_HOME}/conf:${TEZ_HOME}/*:${TEZ_HOME}/lib/*
+
+# Save and exit the editor
+
+# Modify Hive configuration
+sudo nano ${HIVE_HOME}/conf/hive-site.xml
+
+# Update the hive.execution.engine property to use Tez
+<property>
+  <name>hive.execution.engine</name>
+  <value>tez</value>
+</property>
+
+# Save and exit the editor
+
+# If you have a metastore problem, remove and reconfigure it
+rm -rf metastore_db/
+$HIVE_HOME/bin/schematool -initSchema -dbType derby

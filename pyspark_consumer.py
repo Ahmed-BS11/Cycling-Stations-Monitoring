@@ -12,8 +12,6 @@ es = Elasticsearch([{'host': 'localhost', 'port': 9200, 'scheme': 'http'}])
 # Define the index name
 index_name = "velib-stations"
 
-# Warehouse location for Hive
-warehouse_location = abspath('spark-warehouse')
 
 # Check if the Elasticsearch index exists
 if es.indices.exists(index=index_name):

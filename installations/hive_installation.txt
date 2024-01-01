@@ -1,0 +1,35 @@
+# Download and extract Hive
+wget https://downloads.apache.org/hive/hive-3.1.2/apache-hive-3.1.2-bin.tar.gz
+tar -xzvf apache-hive-3.1.2-bin.tar.gz
+mv apache-hive-3.1.2-bin /opt/hive
+
+# Set environment variables
+echo "export HIVE_HOME=/opt/hive" >> ~/.bashrc
+echo "export PATH=\$PATH:\$HIVE_HOME/bin" >> ~/.bashrc
+source ~/.bashrc
+
+# Create directory for Hive temp data
+mkdir /tmp/hive
+chmod 777 /tmp/hive
+
+# Configure the metastore
+cp $HIVE_HOME/conf/hive-default.xml.template $HIVE_HOME/conf/hive-site.xml
+
+# Edit hive-site.xml
+echo "<property>" >> $HIVE_HOME/conf/hive-site.xml
+echo "    <name>javax.jdo.option.ConnectionURL</name>" >> $HIVE_HOME/conf/hive-site.xml
+echo "    <value>jdbc:derby:;databaseName=/opt/hive/metastore_db;create=true</value>" >> $HIVE_HOME/conf/hive-site.xml
+echo "    <description>JDBC connect string for a JDBC metastore</description>" >> $HIVE_HOME/conf/hive-site.xml
+echo "</property>" >> $HIVE_HOME/conf/hive-site.xml
+
+# Start the Hive Metastore
+$HIVE_HOME/bin/schematool -dbType derby -initSchema
+$HIVE_HOME/bin/hive --service metastore
+
+# Integrate with Spark code
+# In your Spark code, add the following line:
+# .config("spark.sql.warehouse.dir", "/user/hive/warehouse") \
+# .enableHiveSupport()
+
+# Note: Make sure to create the /user/hive/warehouse directory in HDFS before running Spark
+hdfs dfs -mkdir -p /user/hive/warehouse

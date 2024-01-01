@@ -1,4 +1,20 @@
-# Velib Stations Monitoring
+<h1 align="center">
+  <br>
+  Velib Cycling Stations Monitoring
+</h1>
+
+<div align="center">
+  <h4>
+    <a href="#overview">Overview</a> |
+    <a href="#requirements">Requirements</a> |
+    <a href="#setup">Setup</a> |
+    <a href="#kibana-visualizations">Kibana Visualizations</a> |
+    <a href="#installation-guide">installation guide</a>
+  </h4>
+</div>
+
+<br>
+
 
 ## Overview
 
@@ -7,7 +23,19 @@ This Python script utilizes Apache Spark and Elasticsearch to monitor Velib bike
 
 ## Requirements
 
-Ensure you have the following dependencies installed:
+Technologies Used:
+| Technology  | Version  |
+| ------------ | -------- |
+|Spark         |3.3.1      |
+| Elasticsearch | 7.17.16  |
+| Kibana        | 7.17.16  |
+| Kafka         | 2.13-3.6.0|
+| Hadoop        | 3.3.6    |
+| Hive          | 3.1.2    |
+| Tez           | 0.9.2    |
+
+
+For Python, ensure you have the following dependencies installed:
 
 - `elasticsearch==8.10.1`
 - `pyspark==3.5.0`
@@ -90,3 +118,14 @@ spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 pyspark
 ![Latest Bike Counts Table](images/last_number_of_bikes.png)
 
 *Description:* This image features the latest bike counts in different cities in the last 30 seconds.
+
+
+# Installation Guide
+
+## Reference PDF
+
+For a comprehensive installation guide, you can refer to the [Installation Guide PDF](INSTALLATIONS_GUIDE.pdf) provided in this repository.
+
+## Detailed Installation Steps
+
+For specific and detailed installation instructions tailored to this project, please navigate to the [installation](installation/) folder in the repository.
