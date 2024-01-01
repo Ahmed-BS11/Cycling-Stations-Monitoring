@@ -16,12 +16,12 @@
 <br>
 
 
-## Overview
+# Overview
 
 This Python script utilizes Apache Spark and Elasticsearch to monitor real-time status of Velib bike stations. It reads data from a Kafka topic, processes it with PySpark, and indexes relevant information into Elasticsearch. Kibana is then employed for data visualizations, taking advantage of the powerful analytics capabilities of the Elasticsearch-Kibana stack. Additionally, the script identifies and logs empty bike stations, providing valuable insights into station utilization and availability. The project integrates Hive LLAP (Live Long and Process), requiring dependencies on Hadoop, Hive, and Tez for optimized query performance.
 
 
-## Requirements
+# Requirements
 
 Technologies Used:
 | Technology  | Version  |
@@ -47,7 +47,7 @@ You can install them using the following command:
 pip install -r requirements.txt
 ```
 
-## Setup
+# Setup
 
 ### Elasticsearch Setup:
 
@@ -64,7 +64,7 @@ pip install -r requirements.txt
 
 - The Spark session is configured to connect to Elasticsearch on `localhost:9200`.
 
-## Running the Script
+### Running the Script
 
 Before executing the main pyspark_consumer.py, ensure that Zookeeper and Kafka servers are running. You can start them using the following commands in different terminals and IN THAT ORDER:
 
@@ -85,25 +85,25 @@ spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 pyspark
 ```
 # Kibana Visualizations 
 
-## Kibana Dashboard
+### Kibana Dashboard
 
 ![Kibana Dashboard](images/dashboard.png)
 
 *Description:* This image displays the Kibana dashboard.
 
-## Global Map
+### Global Map
 
 ![Global Map](images/global_map.png)
 
 *Description:* This image provides an overview of the stations map in Europe.
 
-## Valencia City Map
+### Valencia City Map
 
 ![Valencia City Map](images/valencia_stations.png)
 
 *Description:* This image presents the map for bike stations and their capacity in the city of Valencia.
 
-## Bike Count Evolution in 3 Chosen Cities
+### Bike Count Evolution in 3 Chosen Cities
 
 ![Bike Count Evolution](images/bike_evolution_3_cities.png)
 
@@ -113,7 +113,7 @@ spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 pyspark
 
 *Description:* When hovering over the plot, the number of bikes in each city appears in the window.
 
-## Latest Bike Counts Table
+### Latest Bike Counts Table
 
 ![Latest Bike Counts Table](images/last_number_of_bikes.png)
 
@@ -122,10 +122,10 @@ spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2 pyspark
 
 # Installation Guide
 
-## Reference PDF
+### Reference PDF
 
 For a comprehensive installation guide, you can refer to the [Installation Guide PDF](INSTALLATIONS_GUIDE.pdf) provided in this repository.
 
-## Detailed Installation Steps
+### Detailed Installation Steps
 
 For specific and detailed installation instructions tailored to this project, please navigate to the [installation](installation/) folder in the repository.
